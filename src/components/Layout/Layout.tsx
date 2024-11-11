@@ -7,9 +7,8 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider, Navigation, } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
-import { PageContainer } from '@toolpad/core/PageContainer';
-import Grid from '@mui/material/Grid2';
-import { Outlet, useRoutes } from 'react-router-dom';
+import { PageContainer } from '@toolpad/core/PageContainer';;
+import { Outlet } from 'react-router-dom';
 
 
 const NAVIGATION: Navigation = [
@@ -43,7 +42,7 @@ const NAVIGATION: Navigation = [
         ],
     },
     {
-        segment: 'integrations',
+        segment: 'settings',
         title: 'Configurações',
         icon: <LayersIcon />,
     },
@@ -71,13 +70,11 @@ export default function Layout(props: any) {
         <AppProvider
             navigation={NAVIGATION}
             theme={demoTheme}
-            
+
         >
-            <DashboardLayout >
+            <DashboardLayout  >
                 <PageContainer >
-                    <Grid container spacing={1}>
-                        <Outlet />
-                    </Grid>
+                    <Outlet />
                 </PageContainer>
             </DashboardLayout>
         </AppProvider>
