@@ -37,6 +37,7 @@ const NotaFiscal = () => {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
     return (
         <Container>
             <Box sx={{ width: '100%' }}>

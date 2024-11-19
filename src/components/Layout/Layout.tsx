@@ -74,9 +74,8 @@ export default function Layout(props: any) {
         <AppProvider
             navigation={NAVIGATION}
             theme={demoTheme}
-
         >
-            <DashboardLayout  >
+            <DashboardLayout>
                 <PageContainer  >
                     <Outlet />
                 </PageContainer>

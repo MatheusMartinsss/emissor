@@ -1,45 +1,33 @@
-import { Button, Container, FormControl, FormHelperText, FormLabel, Grid2, MenuItem, Select, Stack, styled, Switch, SwitchProps, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, Button, Container, FormControl, FormHelperText, FormLabel, Grid2, MenuItem, Select, Stack, styled, Switch, SwitchProps, TextField, Typography } from "@mui/material"
 import React, { ChangeEvent, useState } from "react";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
+import { CEPMaskCustom, CNPJMaskCustom, CPFMaskCustom } from "./MaskInput";
+import Search from '@mui/icons-material/Search';
 
-interface CustomProps {
-    onChange: (event: { target: { name: string; value: string } }) => void;
-    name: string;
-}
 const schema = yup.object({
     cnpj: yup.string().required('Campo obrigatório'),
-    ieEstadual: yup.string().required('Campo obrigatório'),
+    ieEstadual: yup.string(),
     ieMunicipal: yup.string(),
     razaoSocial: yup.string().required('Campo obrigatório').min(12, 'Minimo 12 caracteres').max(128),
     nomeFantasia: yup.string().required('Campo obrigatório').min(12, 'Minimo 12 caracteres').max(128),
     cnaePrincipal: yup.string().required('Campo obrigatório'),
     regimeTributario: yup.number().required('Campo obrigatório').oneOf([1, 2, 3, 4]),
-    ambiente: yup.string().required().oneOf(['producao', 'homologacao']),
+    ambiente: yup.string().required().oneOf(['producao', 'homologacao'], 'Selecione uma opção'),
     email: yup.string().email().required('Campo obrigatório'),
-    telefone: yup.string().required('Campo obrigatório')
+    telefone: yup.string(),//required('Campo obrigatório'),
+    indicadorIE: yup.string().required('Campo obrigatório'),
+    cep: yup.string().required('Campo obrigatório'),
+    logradouro: yup.string().required('Campo obrigatório'),
+    complemento: yup.string(),
+    estado: yup.string().required('Campo obrigatório'),
+    cidade: yup.string().required('Campo obrigatório'),
 })
 
 
-const TextMaskCustom = React.forwardRef<HTMLInputElement, CustomProps>(
-    function TextMaskCustom(props, ref) {
-        const { onChange, ...other } = props;
-        return (
-            <IMaskInput
-                {...other}
-                mask="##.###.###/####-##"
-                definitions={{
-                    '#': /[0-9]/,
-                }}
-                inputRef={ref}
-                onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
-                overwrite
-            />
-        );
-    },
-);
+
 const AntSwitch = styled(Switch)(({ theme }) => ({
     width: 28,
     height: 16,
@@ -89,7 +77,7 @@ const AntSwitch = styled(Switch)(({ theme }) => ({
 
 const DestinatarioForm = () => {
     const [tipoChecked, setTipoChecked] = useState<boolean>(true)
-    const { handleSubmit, control } = useForm({
+    const { handleSubmit, control,getValues,watch, formState:{errors} } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             ambiente: '',
@@ -101,7 +89,13 @@ const DestinatarioForm = () => {
             nomeFantasia: '',
             razaoSocial: '',
             regimeTributario: 1,
-            telefone: ''
+            telefone: '',
+            indicadorIE: '',
+            cep: '',
+            logradouro: '',
+            complemento: '',
+            estado: '',
+            cidade: ''
         }
     })
     const onSubmit = (data) => {
@@ -110,27 +104,31 @@ const DestinatarioForm = () => {
     const handleSwitch = () => {
         setTipoChecked((state) => !state)
     }
+    const estadoMockup = ["São Paulo", 'Rio de Janeiro', 'Rio Grande do Sul', 'BH'];
+    const cidadesMockup = ["Santa Catarina", 'Osasco', 'ES'];
+    
+    console.log(getValues())
+    console.log(watch("indicadorIE"))
+    console.log(errors)
     return (
         <Container>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid2 container spacing={2}>
                     <Grid2 size={12}>
                         <FormControl fullWidth>
-                            <FormLabel>Tipo</FormLabel>
-                            <Controller
-                                control={control}
-                                name='tipo'
-                                render={({ field: { onChange, value }, fieldState: { error } }) =>(
-                                    
-                                )}
-                            />
-                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                <AntSwitch checked={tipoChecked} onChange={handleSwitch} inputProps={{ 'aria-label': 'ant design' }} />
-                                <Typography>Fisica</Typography>
-                            </Stack>
+                            <Box  display='flex' justifyContent='' gap={1}>
+                                <FormLabel>Pessoa Fisica</FormLabel>
+                                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                    <AntSwitch checked={tipoChecked} onChange={handleSwitch} inputProps={{ 'aria-label': 'ant design' }} />                       
+                                </Stack>
+                                </Box>
+                            
+                             
+                            
                         </FormControl>
                     </Grid2>
-                    <Grid2 size={4}>
+
+                    <Grid2 size={6}>
                         <Controller
                             control={control}
                             rules={{
@@ -140,16 +138,134 @@ const DestinatarioForm = () => {
                             render={({ field: { onChange, value }, fieldState: { error } }) => (
                                 <FormControl fullWidth>
                                     <FormLabel>CNPJ/CPF*</FormLabel>
-                                    <TextField
-                                        size='small'
-                                        onChange={onChange} value={value}
-                                        error={!!error}
-                                        slotProps={{
-                                            input: {
-                                                inputComponent: TextMaskCustom as any
-                                            }
-                                        }}
-                                    />
+                                    <Box gap={1} display={"flex"} alignItems={"center"} justifyContent={"start"}>
+                                        <TextField
+                                            size='small'
+                                            onChange={onChange} value={value}
+                                            error={!!error}
+                                            slotProps={{
+                                                input: {
+                                                    inputComponent: tipoChecked ? CPFMaskCustom as any: CNPJMaskCustom as any
+                                                }
+                                            }}
+                                        />
+                                        <Button variant="contained"  sx={{ 
+                                                                        fontSize: "10px", 
+                                                                        display: "flex", 
+                                                                        alignItems: "center", // Alinha o ícone e o texto verticalmente
+                                                                        gap: 1 // Adiciona um espaço entre o texto e o ícone
+                                                                    }}>Buscar <Search/>
+                                        </Button>
+                                    </Box>
+                                    {error && <FormHelperText >{error.message}</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+                    <Grid2 size={6}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true
+                            }}
+                            name="cep"
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth>
+                                    <FormLabel>CEP</FormLabel>
+                                    <Box gap={1} display={"flex"} alignItems={"center"} justifyContent={"start"}>
+                                        <TextField
+                                            size='small'
+                                            onChange={onChange} value={value}
+                                            error={!!error}
+                                            slotProps={{
+                                                input: {
+                                                    inputComponent: tipoChecked ? CPFMaskCustom as any: CNPJMaskCustom as any
+                                                }
+                                            }}
+                                        />
+                                        <Button variant="contained"  sx={{ 
+                                                                        fontSize: "10px", 
+                                                                        display: "flex", 
+                                                                        alignItems: "center", // Alinha o ícone e o texto verticalmente
+                                                                        gap: 1 // Adiciona um espaço entre o texto e o ícone
+                                                                    }}>Buscar<Search/>
+                                        </Button>
+                                    </Box>              
+                                    {error && <FormHelperText >{error.message}</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+                    
+
+                    <Grid2 size={4}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true
+                            }}
+                            name="indicadorIE"
+                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth size="small">
+                                    <FormLabel>Indicador IE</FormLabel>
+                                    <Select onChange={onChange} value={value} error={!!error} >
+                                        <MenuItem value='Contribuinte'>Contribuinte</MenuItem>
+                                        <MenuItem value='Contribuinte Insento'>Contribuinte Insento</MenuItem>
+                                        <MenuItem value='Não Contribuinte'>Não Contribuinte</MenuItem>
+                                    </Select>
+                                    {error && <FormHelperText >{error.message}</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+
+
+                  
+                    <Grid2 size={4}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: getValues("indicadorIE") === 'Contribuinte'
+                            }}
+                            name="ieEstadual"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth size="small">
+                                    <FormLabel>Inscrição Estadual*</FormLabel>
+                                    <TextField   disabled={getValues("indicadorIE") === "Não Contribuinte" || getValues("indicadorIE") === "Contribuinte Insento"}  size="small" onChange={onChange} onBlur={onBlur} value={getValues("indicadorIE") === "Contribuinte Insento" ? "INSENTO" : value} error={!!error} />
+                                    {getValues("indicadorIE") === 'Contribuinte'  && <FormHelperText >Campo obrigatório</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+
+                    <Grid2 size={4}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true
+                            }}
+                            name="logradouro"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth size="small">
+                                    <FormLabel>Logradouro*</FormLabel>
+                                    <TextField     size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
+                                    {error && <FormHelperText >{error.message}</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+
+                    <Grid2 size={4}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true
+                            }}
+                            name="complemento"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth size="small">
+                                    <FormLabel>Complemennto</FormLabel>
+                                    <TextField size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
                                 </FormControl>
                             )}
@@ -161,16 +277,47 @@ const DestinatarioForm = () => {
                             rules={{
                                 required: true
                             }}
-                            name="ieEstadual"
+                            name="estado"
                             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                                 <FormControl fullWidth size="small">
-                                    <FormLabel>Inscrição Estadual*</FormLabel>
-                                    <TextField size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
+                                    <FormLabel>Estado</FormLabel>
+                                    <Autocomplete
+                                    onChange={(event, value) => onChange(value)}
+                                    value={value}
+                                        
+                                          options={estadoMockup} // Lista de opções
+                                        renderInput={(params) => <TextField {...params} label="" />} // Renderiza o TextField com label
+                                        />
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
                                 </FormControl>
                             )}
                         />
                     </Grid2>
+
+                    <Grid2 size={4}>
+                        <Controller
+                            control={control}
+                            rules={{
+                                required: true
+                            }}
+                            name="cidade"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <FormControl fullWidth size="small">
+                                    <FormLabel>Cidade</FormLabel>
+                                    <Autocomplete
+                                    onChange={(event, value) => onChange(value)}
+                                    value={value}
+                                        disablePortal
+                                        options={cidadesMockup} // Lista de opções
+                                        renderInput={(params) => <TextField {...params} label="" />} // Renderiza o TextField com label
+                                        />
+                                    {error && <FormHelperText >{error.message}</FormHelperText>}
+                                </FormControl>
+                            )}
+                        />
+                    </Grid2>
+
+                   
                     <Grid2 size={4}>
                         <Controller
                             control={control}
@@ -246,7 +393,7 @@ const DestinatarioForm = () => {
                             render={({ field: { onChange, value }, fieldState: { error } }) => (
                                 <FormControl fullWidth size="small">
                                     <FormLabel>CNAE Principal*</FormLabel>
-                                    <Select onChange={onChange} value={value} >
+                                    <Select onChange={onChange} value={value}  error={!!error} >
                                         <MenuItem value='producao'>Produção</MenuItem>
                                         <MenuItem value='homologacao'>Homologação</MenuItem>
                                     </Select>
@@ -286,7 +433,7 @@ const DestinatarioForm = () => {
                             render={({ field: { onChange, value }, fieldState: { error } }) => (
                                 <FormControl fullWidth size="small">
                                     <FormLabel>Ambiente</FormLabel>
-                                    <Select onChange={onChange} value={value} >
+                                    <Select  error={!!error} onChange={onChange} value={value} >
                                         <MenuItem value='producao'>Produção</MenuItem>
                                         <MenuItem value='homologacao'>Homologação</MenuItem>
                                     </Select>
