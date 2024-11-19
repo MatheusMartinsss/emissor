@@ -25,6 +25,10 @@ const NAVIGATION: Navigation = [
         segment: 'notas',
         title: 'Notas',
         icon: <ShoppingCartIcon />,
+    }, {
+        segment: 'nota_fiscal',
+        title: 'Nota Fiscal',
+        icon: <ShoppingCartIcon />,
     },
     {
         kind: 'divider',
@@ -55,8 +59,8 @@ const demoTheme = extendTheme({
         values: {
             xs: 0,
             sm: 600,
-            md: 600,
-            lg: 1200,
+            md: 800,
+            lg: 1300,
             xl: 1536,
         },
     },
@@ -73,7 +77,7 @@ export default function Layout(props: any) {
 
         >
             <DashboardLayout  >
-                <PageContainer >
+                <PageContainer  >
                     <Outlet />
                 </PageContainer>
             </DashboardLayout>

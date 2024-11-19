@@ -15,13 +15,12 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
 interface Data {
+    id: string;
     number: number;
     emitedAt: string;
     name: string;
@@ -30,6 +29,7 @@ interface Data {
 }
 
 function createData(
+    id: string,
     number: number,
     emitedAt: string,
     name: string,
@@ -37,6 +37,7 @@ function createData(
     status: string,
 ): Data {
     return {
+        id,
         number,
         emitedAt,
         name,
@@ -46,10 +47,10 @@ function createData(
 }
 
 const rows = [
-    createData(100, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
-    createData(101, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
-    createData(102, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
-    createData(103, '07/11/2024', 'Cliente 1', 1000, 'Cancelada'),
+    createData('aseasesae', 100, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
+    createData('asease23sae',101, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
+    createData('aseases3af',102, '07/11/2024', 'Cliente 1', 1000, 'Validada'),
+    createData('aseas215esae',103, '07/11/2024', 'Cliente 1', 1000, 'Cancelada'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -83,7 +84,7 @@ interface HeadCell {
     numeric: boolean;
 }
 
-const headCells: readonly HeadCell[] = [ 
+const headCells: readonly HeadCell[] = [
     {
         id: 'number',
         numeric: false,
@@ -150,7 +151,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >
@@ -206,7 +206,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     id="tableTitle"
                     component="div"
                 >
-                    Nutrition
+                    Notas Fiscais
                 </Typography>
             )}
             {numSelected > 0 ? (
@@ -303,7 +303,7 @@ export default function NotasTable() {
                     <Table
                         sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
-                        size={dense ? 'small' : 'medium'}
+                        size='medium'
                     >
                         <EnhancedTableHead
                             numSelected={selected.length}
@@ -349,8 +349,8 @@ export default function NotasTable() {
 
                                         <TableCell >{row.emitedAt}</TableCell>
                                         <TableCell >{row.name}</TableCell>
-                                        <TableCell align="right">{row.value}</TableCell>
-                                        <TableCell align="right">{row.status}</TableCell>
+                                        <TableCell >{row.value}</TableCell>
+                                        <TableCell >{row.status}</TableCell>
                                     </TableRow>
                                 );
                             })}
@@ -376,10 +376,7 @@ export default function NotasTable() {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            />
+
         </Box>
     );
 }
