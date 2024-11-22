@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import BasicTable from "./TableComponent";
 import ModalCadastroModal from "./ModalCadastroProduto";
+import { PlusOne } from "@mui/icons-material";
 
 
 const ProductForm = () => {
@@ -28,12 +29,12 @@ const ProductForm = () => {
                             sx={{ flexGrow: 1 }}
                             size="small"
                         />
-                        <Button onClick={() => handleClickOpenModal()} sx={{ bgcolor: "green", color: "white", fontWeight: "600" }}>+ Novo</Button>
+                        <Button onClick={() => handleClickOpenModal()} sx={{ bgcolor: "green", color: "white", fontWeight: "600", display:"flex", alignItems:"center", justifyContent:"center" }}><PlusOne /> Novo</Button>
                         <ModalCadastroModal open={openModal} handleClose={handleClickCloseModal} />
                     </Box>
                 </Grid2>
 
-                <Grid2 size={2}>
+                <Grid2 size={3}>
                     <Typography variant="body2" >Quantidade</Typography>
                     <TextField
                         type="number"
