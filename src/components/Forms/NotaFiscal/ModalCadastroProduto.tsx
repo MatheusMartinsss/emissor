@@ -1,30 +1,26 @@
-import { Box, Modal } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, Grid2, InputLabel, MenuItem, Modal, Select, Switch } from "@mui/material"
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
+ 
 const ModalCadastroModal = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
 
-    return <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-    >
-        <Box sx={{ ...style, width: 1000 }}>
-            <h2 id="parent-modal-title">Cadastrar produto</h2>
-        </Box>
-    </Modal>
+    return <Dialog
+    fullWidth={true}
+    maxWidth="lg"
+    open={open}
+    onClose={handleClose}
+  >
+    <DialogTitle sx={{fontWeight:700}}>Cadastrar produtos</DialogTitle>
+    <Box sx={{width:"100%", height:"4px",bgcolor:"blue"}}/>
+    <DialogContent>
+        <Grid2 container>
+            
+        </Grid2>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleClose}>Voltar</Button>
+    </DialogActions>
+  </Dialog>
+
 }
 
 export default ModalCadastroModal

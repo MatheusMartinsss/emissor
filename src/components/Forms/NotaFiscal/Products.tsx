@@ -4,6 +4,7 @@ import { useState } from "react";
 import BasicTable from "./TableComponent";
 import ModalCadastroModal from "./ModalCadastroProduto";
 import { PlusOne } from "@mui/icons-material";
+import LtePlusMobiledata from "@mui/icons-material/LtePlusMobiledata";
 
 
 const ProductForm = () => {
@@ -29,7 +30,7 @@ const ProductForm = () => {
                             sx={{ flexGrow: 1 }}
                             size="small"
                         />
-                        <Button onClick={() => handleClickOpenModal()} sx={{ bgcolor: "green", color: "white", fontWeight: "600", display:"flex", alignItems:"center", justifyContent:"center" }}><PlusOne /> Novo</Button>
+                        <Button onClick={() => handleClickOpenModal()} sx={{ bgcolor: "green", color: "white", fontWeight: "600", display:"flex", alignItems:"flex-start", justifyContent:"flex-start", gap:1}}><span>+</span> Novo</Button>
                         <ModalCadastroModal open={openModal} handleClose={handleClickCloseModal} />
                     </Box>
                 </Grid2>
