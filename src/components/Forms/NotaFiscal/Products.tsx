@@ -1,10 +1,10 @@
 import { Box, Button, Container, Grid2, TextField, Typography } from "@mui/material"
 import { useState } from "react";
 
-import BasicTable from "./TableComponent";
 import ModalCadastroModal from "./ModalCadastroProduto";
 import { PlusOne } from "@mui/icons-material";
 import LtePlusMobiledata from "@mui/icons-material/LtePlusMobiledata";
+import Table from "./Table";
 
 
 const ProductForm = () => {
@@ -45,7 +45,7 @@ const ProductForm = () => {
             </Grid2>
 
             <Grid2 sx={{ mt: 4 }}>
-                <BasicTable />
+                <Table />
             </Grid2>
         </Container>
     )

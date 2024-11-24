@@ -1,60 +1,191 @@
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+/* import React from 'react'
+import ReactDOM from 'react-dom/client'
 
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return { name, calories, fat, carbs, protein };
+import './index.css'
+
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingFn,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table'
+ 
+//custom sorting logic for one of our enum columns
+const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+  const statusA = rowA.original.status
+  const statusB = rowB.original.status
+  const statusOrder = ['single', 'complicated', 'relationship']
+  return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+export function Table() {
+  const rerender = React.useReducer(() => ({}), {})[1]
 
-export default function BasicTable() {
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const columns = React.useMemo<ColumnDef<Person>[]>(
+    () => [
+      {
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
+        //this column will sort in ascending order by default since it is a string column
+      },
+      {
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+        sortUndefined: 'last', //force undefined values to the end
+        sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        //this column will sort in descending order by default since it is a number column
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        sortUndefined: 'last', //force undefined values to the end
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        sortingFn: sortStatusFn, //use our custom sorting function for this enum column
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        // enableSorting: false, //disable sorting for this column
+      },
+      {
+        accessorKey: 'rank',
+        header: 'Rank',
+        invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created At',
+        // sortingFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
+      },
+    ],
+    []
+  )
+
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(() => makeData(100_000)) //stress test with 100k rows
+
+  const table = useReactTable({
+    columns,
+    data,
+    debugTable: true,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(), //client-side sorting
+    onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
+    // sortingFns: {
+    //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use
+    // },
+    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
+    state: {
+      sorting,
+    },
+    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
+    // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true
+    // enableSorting: false, // - default on/true
+    // enableSortingRemoval: false, //Don't allow - default on/true
+    // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
+    // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
+  })
+
+  //access sorting state from the table instance
+  console.log(table.getState().sorting)
+
+  return (
+    <div className="p-2">
+      <div className="h-2" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div
+                        className={
+                          header.column.getCanSort()
+                            ? 'cursor-pointer select-none'
+                            : ''
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                        title={
+                          header.column.getCanSort()
+                            ? header.column.getNextSortingOrder() === 'asc'
+                              ? 'Sort ascending'
+                              : header.column.getNextSortingOrder() === 'desc'
+                                ? 'Sort descending'
+                                : 'Clear sort'
+                            : undefined
+                        }
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                )
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table
+            .getRowModel()
+            .rows.slice(0, 10)
+            .map(row => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => {
+                    return (
+                      <td key={cell.id}>
+                       {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}{flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}{flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+        </tbody>
+      </table>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+      <div>
+        <button onClick={() => rerender()}>Force Rerender</button>
+      </div>
+      <div>
+        <button onClick={() => refreshData()}>Refresh Data</button>
+      </div>
+      <pre>{JSON.stringify(sorting, null, 2)}</pre>
+    </div>
+  )
 }
+
+ 
+ */

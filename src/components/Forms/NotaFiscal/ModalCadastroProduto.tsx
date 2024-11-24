@@ -474,7 +474,6 @@ const ModalCadastroModal = ({ open, handleClose }: { open: boolean, handleClose:
               </Grid2>
                 
     </Grid2>
-
       
        <Box sx={{width:"100%", height:"1px",mt:"18px", bgcolor:"#ccc"}}/>
     </DialogContent>
