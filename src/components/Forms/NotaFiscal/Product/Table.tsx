@@ -1,9 +1,9 @@
-import { ArrowBack, ArrowForwardIosOutlined, ArrowLeftOutlined, ArrowLeftSharp, ArrowRight, ArrowRightAltOutlined, ArrowRightSharp, Delete, DeleteForever } from '@mui/icons-material';
-import ArrowLeft from '@mui/icons-material/ArrowLeft';
-import DeleteRounded from '@mui/icons-material/DeleteRounded';
-import { Box, Button, Checkbox, IconButton, Paper,styled,Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, TextField, Tooltip } from '@mui/material';
-import { useReactTable,flexRender, getCoreRowModel, getSortedRowModel, ColumnDef, RowData, getPaginationRowModel, PaginationState } from '@tanstack/react-table';
-import { useEffect, useMemo, useState } from 'react';
+import {  ArrowLeftSharp, ArrowRightSharp, } from '@mui/icons-material';
+import { Button, Paper,styled,Table, TableBody, TableCell, TableContainer, TableHead, TableRow  } from '@mui/material';
+import { useReactTable,flexRender, getCoreRowModel, ColumnDef, getPaginationRowModel, PaginationState } from '@tanstack/react-table';
+import { useMemo, useState } from 'react';
+import EditCell from './Product/EditCell';
+import { ButtonCell } from './Product/ButtonCell';
 
 // Dados da tabela
 interface Product {
@@ -14,6 +14,7 @@ interface Product {
   total: number;
 }
 
+// Dados da tabela
 const mydata: Product[] = [
   { cod: 1, produto: 'Bolacha', quantidade: 2, preco: 10, total: 0 },
   { cod: 2, produto: 'Pao', quantidade: 2, preco: 10, total: 0 },
@@ -47,90 +48,42 @@ const mydata: Product[] = [
   { cod: 10, produto: 'Banana', quantidade: 2, preco: 10, total: 0 },
 ];
 
-// Definição das colunas
 
-/* const TableMy = () => {
-  const [sorting, setSorting] = useState([]);
-
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    columnResizeMode: "onChange"
-  });
-
-  return (
-    <table>
-      <thead>
-        {table.getHeaderGroups().map(headerGroup => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
-              <th style={{position:"relative"}} key={header.id}> 
-              {flexRender(
-                header.column.columnDef.header,
-                header.getContext()
-              )}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map(row => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map(cell => (
-              <td key={cell.id}>
-                {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                )}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
- */
-export default function BasicTable() {
+export default function TableProdut() {
   const [data, setData] = useState(mydata)
   const [pagination, setPagination] = useState<PaginationState>({ 
     pageIndex: 0,
     pageSize: 3, //linhas por página
   })
-   const columns = useMemo<ColumnDef<Product>[]>(()=> [
-    {
+  const columns = useMemo<ColumnDef<Product>[]>(()=> [
+  {
       accessorKey: 'cod', // Chave do dado
       header: 'Cod. Prod',      // Cabeçalho da coluna 
-    },
-    {
+},
+{
       accessorKey: 'produto',
       header: 'Produto',
-    },
-    {
+},
+{
       accessorKey: 'quantidade',
       header: 'Quantidade',
       cell: EditCell
-    },
-    {
+},
+{
       accessorKey: 'preco',
       header: 'Preço',
       cell: EditCell
-    },
-    {
+},
+{
       accessorKey: 'total',
       header: 'Total',
       cell: EditCell
-    },
-    {
+},
+{
       accessorKey: 'remover',
       header: 'Remover',
       cell: ButtonCell
-    },
+},
   ], []);
   const table = useReactTable({
     data,
@@ -168,53 +121,49 @@ export default function BasicTable() {
     columnResizeMode:"onChange",
     getPaginationRowModel: getPaginationRowModel()
   });
-
   function totalQuantitidade() {
       const total = data.reduce((acc, value) =>
           acc += Number(value.quantidade)
       , 0)
       return total
   }
-
   function totalPreco() {
     const total = data.reduce((acc, value) =>
         acc += Number(value.preco)
     , 0)
     return total
-}
-
-function totalTotal() {
-  const total = data.reduce((acc, value) =>
+  }
+  function totalTotal() {
+    const total = data.reduce((acc, value) =>
       acc += Number(value.total)
   , 0)
-  return total
-}
+  return total  
+  }
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-
+//estilo das linhas
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
         {table.getHeaderGroups().map(headerGroup => (
-          <TableRow>
+          <TableRow key={headerGroup.id}>
               {headerGroup.headers.map(header => (
-                  <TableCell sx={{position:"relative", width: header.id === 'produto' ? 250 : 'auto'}}>
+                  <TableCell key={header.id} width={header.getSize()} >
                     {
                         flexRender(
                         header.column.columnDef.header,
                         header.getContext()
                     )}
-                    <Box  onMouseDown={header.getResizeHandler()} onTouchStart={header.getResizeHandler()} sx={{position:"absolute",cursor: "col-resize", right:0, top:0, width:"5px", height:"100%", bgcolor:"black", touchAction:"none", userSelect:"none"}}/>
                   </TableCell>
               ))}
           </TableRow>
@@ -252,37 +201,4 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       </Table>
     </TableContainer>
   );
-}
- 
-
-
-function EditCell({getValue, table, column, row}:any){     
- const[value, setValue] = useState(getValue());
-
-  useEffect(() => {
-  setValue(getValue());
- }, [getValue]);
-
- useEffect(() => {
-    table.options.meta.firstLoald(row.index, column.id, getValue());
- }, []);
-
-  
-  function handleChange(e:any) {
-    setValue(e.target.value);
-    if (column.id === "quantidade" || column.id === "preco"){
-      table.options.meta.updateData(row.index, column.id, e.target.value);
-      table.options.meta.updateAllData(row.index, column.id, e.target.value);
-    }
-  } 
-  return <TextField  type='number' size='small' value={value} onChange={handleChange} />;
-}
-
-function ButtonCell({ table, row}:any) {
-  return  <Tooltip title="Remover">
-        <IconButton onClick={() => table.options.meta.removeData(row.index)}>
-          <DeleteRounded sx={{color:"#3c33ff"}}/>
-        </IconButton>
-     </Tooltip>
-  
 }

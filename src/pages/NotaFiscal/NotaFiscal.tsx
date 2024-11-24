@@ -1,5 +1,5 @@
 import DestinatarioForm from "@/components/Forms/NotaFiscal/Destinatario";
-import ProductForm from "@/components/Forms/NotaFiscal/Products";
+import ProductForm from "@/components/Forms/NotaFiscal/Product/Products";
 import { Box, Container, Tab, Tabs } from "@mui/material"
 import React from "react";
 
