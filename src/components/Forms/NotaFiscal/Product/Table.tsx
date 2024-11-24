@@ -2,8 +2,9 @@ import {  ArrowLeftSharp, ArrowRightSharp, } from '@mui/icons-material';
 import { Button, Paper,styled,Table, TableBody, TableCell, TableContainer, TableHead, TableRow  } from '@mui/material';
 import { useReactTable,flexRender, getCoreRowModel, ColumnDef, getPaginationRowModel, PaginationState } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
-import EditCell from './Product/EditCell';
-import { ButtonCell } from './Product/ButtonCell';
+import EditCell from './EditCell';
+import { ButtonCell } from './ButtonCell';
+ 
 
 // Dados da tabela
 interface Product {
