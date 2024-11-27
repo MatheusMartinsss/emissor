@@ -65,7 +65,7 @@ export default function TableProdut() {
     const newData = [...data]
     newData[index] = {
       ...newData[index],
-      [column]: Number(value)
+      [column]: column === "produto" ? value : Number(value)
     }
     if (column === "quantidade" || column === "preco")
       newData[index].total = Number(newData[index].quantidade) * Number(newData[index].preco)
@@ -92,10 +92,10 @@ export default function TableProdut() {
           {data.map((row, index) => (
             <TableRow key={row.cod}>
               <TableCell>{row.cod}</TableCell>
-              <TableCell>{row.produto}</TableCell>
+              <TableCell><TextField onChange={({ target }) => handleChangeTextField(target.value, index, "produto")} type='text' size='small' value={row.produto} /></TableCell>
               <TableCell><TextField onChange={({ target }) => handleChangeTextField(target.value, index, "quantidade")} type='number' size='small' value={row.quantidade} /></TableCell>
               <TableCell><TextField onChange={({ target }) => handleChangeTextField(target.value, index, "preco")} type='number' size='small' value={row.preco} /></TableCell>
-              <TableCell><TextField onChange={({ target }) => handleChangeTextField(target.value, index, "total")} type='number' size='small' value={row.total} /></TableCell>
+              <TableCell><TextField disabled onChange={({ target }) => handleChangeTextField(target.value, index, "total")} type='number' size='small' value={row.total} /></TableCell>
               <TableCell>
                 <ButtonCell handleClick={handleRemoveRow} index={index} />
               </TableCell>

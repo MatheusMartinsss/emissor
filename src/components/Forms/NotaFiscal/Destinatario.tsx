@@ -100,7 +100,7 @@ const DestinatarioForm = () => {
             cidade: ''
         }
     })
-    const onSubmit = (data) => {
+    const onSubmit = (data: any) => {
         console.log(data)
     }
     const handleSwitch = () => {
