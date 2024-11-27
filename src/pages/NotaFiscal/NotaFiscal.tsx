@@ -1,4 +1,5 @@
 import DestinatarioForm from "@/components/Forms/NotaFiscal/Destinatario";
+import ProductForm from "@/components/Forms/NotaFiscal/Product/Products";
 import { Box, Container, Tab, Tabs } from "@mui/material"
 import React from "react";
 
@@ -52,7 +53,7 @@ const NotaFiscal = () => {
                     <DestinatarioForm />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
-
+                    <ProductForm />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
 
