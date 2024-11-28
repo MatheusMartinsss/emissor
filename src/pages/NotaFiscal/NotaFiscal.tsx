@@ -1,5 +1,6 @@
 import DestinatarioForm from "@/components/Forms/NotaFiscal/Destinatario";
 import ProductForm from "@/components/Forms/NotaFiscal/Product/Products";
+import TransportForm from "@/components/Forms/NotaFiscal/Transport/Transport";
 import { Box, Container, Tab, Tabs } from "@mui/material"
 import React from "react";
 
@@ -46,7 +47,8 @@ const NotaFiscal = () => {
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="Destinatario" {...a11yProps(0)} />
                         <Tab label="Produtos" {...a11yProps(1)} />
-                        <Tab label="Outros" {...a11yProps(2)} />
+                        <Tab label="Transporte" {...a11yProps(2)} />
+                        <Tab label="Outros" {...a11yProps(3)} />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
@@ -56,6 +58,9 @@ const NotaFiscal = () => {
                     <ProductForm />
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={2}>
+                    <TransportForm />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={3}>
 
                 </CustomTabPanel>
             </Box>
