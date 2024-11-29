@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Search, Shuffle } from "@mui/icons-material";
+import ModalCadastroEmpresa from "./ModalCadastroEmpresa";
 const modalidade: Array<{ id: number, nome: string }> = [
     { id: 1, nome: 'Sem Ocorrência de Transporte', },
     { id: 2, nome: 'Contratação do Frete por conta do Remetente (CIF)', },
@@ -53,7 +54,8 @@ const transporteSchema = yup.object().shape({
         .required("Peso Líquido é obrigatório."),
     pesoBruto: yup
         .string()
-        .required("Peso Bruto é obrigatório.")
+        .required("Peso Bruto é obrigatório."),
+    cpf: yup.string().required("Campo obrigatório")
 })
 
 
@@ -61,22 +63,21 @@ const TransportForm = () => {
     const { handleSubmit, control, formState: { errors }, watch } = useForm({
         resolver: yupResolver(transporteSchema),
     })
-
-    const [openModal, setOpenModal] = useState(false)
-    const [quantidade, setQuantidade] = useState("")
-    function handleClickOpenModal() {
-        setOpenModal(true)
+ 
+    const [openModalEmpresa, setOpenModalEmpresa] = useState(false)
+    function handleCloseModalEmpresa() {
+        setOpenModalEmpresa(false)
     }
-    function handleClickCloseModal() {
-        setOpenModal(false)
+    function handleOpenModalEmpresa() {
+        setOpenModalEmpresa(true)
     }
-    console.log(watch("modalidadeFrete"))
+    console.log(watch())
     return (
         <Container>
+              {/*dados do Tranporte*/}
             <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography color="textSecondary" fontWeight={"700"} variant="body2" >DADOS DO TRANSPORTE</Typography>
             </Box>
-
             <Grid2 container>
                 <Grid2 size={4}>
                     <Controller
@@ -109,9 +110,10 @@ const TransportForm = () => {
                     />
                 </Grid2>
             </Grid2>
-            {/*             Tranporte*/}
+
+            {/*Tranporte*/}
             <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR <Button sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button></Typography>
+                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR <Button onClick={() => handleOpenModalEmpresa()} sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button></Typography>
             </Box>
 
             <Grid2 container sx={{ mt: 1 }} justifyContent={"space-between"} >
@@ -119,7 +121,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="cpf"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -138,10 +140,10 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="nomeRazaoSocial"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
-                                <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1, padding:0 }}>
+                                <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1, padding: 0 }}>
                                     <Typography color="textSecondary" fontWeight={"700"} variant="body2" >Nome / Razão Social</Typography>
                                     <TextField size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
@@ -155,7 +157,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="inscricaoEstadual"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -168,14 +170,14 @@ const TransportForm = () => {
                         }}
                     />
                 </Grid2>
-              
+
             </Grid2>
             <Grid2 alignItems={"center"} justifyContent={"space-between"} container sx={{ mt: 1, mb: 1 }} gap={1}>
                 <Grid2 size={6}>
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="enderecoCompleto"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -191,7 +193,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="municipio"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -207,13 +209,13 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="uf"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                     <Typography color="textSecondary" fontWeight={"700"} variant="body2">UF</Typography>
                                     <Select
-                                 
+
                                         error={!!error}
                                         autoFocus
                                         value={value}
@@ -232,26 +234,24 @@ const TransportForm = () => {
                         }}
                     />
                 </Grid2>
-              
+
             </Grid2>
 
-
             {/*Volumes*/}
-            <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
+            <Box bgcolor={grey[300]}sx={{padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography color="textSecondary" fontWeight={"700"} variant="body2" >VOLUMES</Typography>
             </Box>
-
-            <Grid2 container sx={{ mt: 1 }} gap={1}>
+            <Grid2 container sx={{ mt: 1 }} gap={1} justifyContent={"space-between"}>
                 <Grid2 size={1}>
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="quantidade"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                     <Typography color="textSecondary" fontWeight={"700"} variant="body2" >Quantidade</Typography>
-                                    <TextField size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
+                                    <TextField type="number" size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
                                 </FormControl>
                             )
@@ -262,7 +262,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="especie"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -278,7 +278,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="marca"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -294,7 +294,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="numeracao"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -310,7 +310,7 @@ const TransportForm = () => {
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="pesoLiquido"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -322,11 +322,11 @@ const TransportForm = () => {
                         }}
                     />
                 </Grid2>
-                <Grid2 >
+                <Grid2 size={2}>
                     <Controller
                         control={control}
                         rules={{ required: true }}
-                        name="modalidadeFrete"
+                        name="pesoBruto"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
                             return (
                                 <FormControl fullWidth size="small" sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -339,10 +339,9 @@ const TransportForm = () => {
                         }}
                     />
                 </Grid2>
-                <Divider />
             </Grid2>
 
-
+        <ModalCadastroEmpresa open={openModalEmpresa} handleClose={handleCloseModalEmpresa} />
         </Container>
     )
 }

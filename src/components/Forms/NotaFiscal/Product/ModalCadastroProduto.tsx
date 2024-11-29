@@ -84,8 +84,7 @@ const ModalCadastroModal = ({ open, handleClose }: { open: boolean, handleClose:
     function onSubmit(data: any) {
         console.log(data)
     }
-    watch()
-    console.log(errors)
+ 
     return <Dialog
         fullWidth={true}
         maxWidth="lg"
