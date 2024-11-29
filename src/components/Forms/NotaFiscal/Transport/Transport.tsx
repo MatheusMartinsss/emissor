@@ -113,7 +113,7 @@ const TransportForm = () => {
 
             {/*Tranporte*/}
             <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR <Button onClick={() => handleOpenModalEmpresa()} sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button></Typography>
+                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR <Button sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button></Typography>
             </Box>
 
             <Grid2 container sx={{ mt: 1 }} justifyContent={"space-between"} >
@@ -128,7 +128,7 @@ const TransportForm = () => {
                                     <Typography color="textSecondary" fontWeight={"700"} variant="body2" >CNPJ/CPF</Typography>
                                     <Stack direction="row" spacing={1} alignItems={"center"} justifyContent={"space-between"}>
                                         <TextField size="small" onChange={onChange} onBlur={onBlur} value={value} error={!!error} />
-                                        <Button variant="contained"><Search /> Buscar</Button>
+                                        <Button variant="contained" onClick={() => handleOpenModalEmpresa()}><Search /> Buscar</Button>
                                     </Stack>
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
                                 </FormControl>
