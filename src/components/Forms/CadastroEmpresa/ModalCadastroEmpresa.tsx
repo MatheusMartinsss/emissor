@@ -61,7 +61,7 @@ const TextMaskPhone = React.forwardRef<HTMLInputElement, CustomProps>(
     },
 );
 
-const ModalCadastroEmpresa =  ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
+const ModalCadastroEmpresa = ({ open, handleClose }: { open: boolean, handleClose: () => void }) => {
     const { handleSubmit, control } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -77,24 +77,24 @@ const ModalCadastroEmpresa =  ({ open, handleClose }: { open: boolean, handleClo
             telefone: ''
         }
     })
-    const onSubmit = (data:any) => {
+    const onSubmit = (data: any) => {
         console.log(data)
     }
     return (
         <Dialog
-        fullWidth={true}
-        maxWidth="lg"
-        open={open}
-        onClose={handleClose}
-    >
-       <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogTitle>Cadastrar Empresa</DialogTitle>
-        <DialogContent>
-              <CadastroEmpresa />
-        </DialogContent>   
-        </form>
-    </Dialog>
+            fullWidth={true}
+            maxWidth="lg"
+            open={open}
+            onClose={handleClose}
+        >
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <DialogTitle>Cadastrar Empresa</DialogTitle>
+                <DialogContent>
+                    <CadastroEmpresa />
+                </DialogContent>
+            </form>
+        </Dialog>
     )
 }
- 
+
 export default ModalCadastroEmpresa

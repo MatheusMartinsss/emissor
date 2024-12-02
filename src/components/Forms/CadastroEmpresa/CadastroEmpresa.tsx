@@ -1,8 +1,8 @@
 import { Box, Container, Tab, Tabs } from "@mui/material"
 import React from "react";
-import DadosForm from "../../Empresa/Dados";
-import EnderecoForm from "../../Empresa/Endereco";
-import NfeForm from "../../Empresa/Nfe";
+import DadosForm from "../Empresa/Dados";
+import EnderecoForm from "../Empresa/Endereco";
+import NfeForm from "../Empresa/Nfe";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -47,7 +47,6 @@ const CadastroEmpresa = () => {
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <Tab label="DADOS DA EMPRESA" {...a11yProps(0)} />
                         <Tab label="ENDEREÇO" {...a11yProps(1)} />
-                        <Tab label="NFE" {...a11yProps(2)} />
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
@@ -55,9 +54,6 @@ const CadastroEmpresa = () => {
                 </CustomTabPanel>
                 <CustomTabPanel value={value} index={1}>
                     <EnderecoForm />
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={2}>
-                    <NfeForm />
                 </CustomTabPanel>
             </Box>
         </Container>

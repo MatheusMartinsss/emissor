@@ -115,15 +115,12 @@ const DestinatarioForm = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid2 container spacing={2}>
                     <Grid2 size={12}>
-                        <FormControl fullWidth>
-                            <Box display='flex' justifyContent='' gap={1}>
+                        <FormControl >
+                            <Button size="small" sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button>
+                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                                 <FormLabel>Pessoa Fisica</FormLabel>
-                                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                                    <AntSwitch checked={tipoChecked} onChange={handleSwitch} inputProps={{ 'aria-label': 'ant design' }} />
-                                </Stack>
-                            </Box>
-
-
+                                <AntSwitch checked={tipoChecked} onChange={handleSwitch} inputProps={{ 'aria-label': 'ant design' }} />
+                            </Stack>
                         </FormControl>
                     </Grid2>
 

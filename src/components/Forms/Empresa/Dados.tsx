@@ -2,8 +2,9 @@ import { IMaskInput } from 'react-imask';
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
-import { Box, Button, FormControl, FormHelperText, FormLabel, Grid2, MenuItem, Select, TextField } from "@mui/material"
-import React from 'react';
+import { Box, Button, FormControl, FormHelperText, FormLabel, Grid2, MenuItem, Select, Stack, styled, Switch, TextField } from "@mui/material"
+import React, { useState } from 'react';
+import { CNPJMaskCustom, CPFMaskCustom } from '../NotaFiscal/MaskInput';
 
 
 const schema = yup.object({
@@ -12,9 +13,6 @@ const schema = yup.object({
     ieMunicipal: yup.string(),
     razaoSocial: yup.string().required('Campo obrigatório').min(12, 'Minimo 12 caracteres').max(128),
     nomeFantasia: yup.string().required('Campo obrigatório').min(12, 'Minimo 12 caracteres').max(128),
-    cnaePrincipal: yup.string().required('Campo obrigatório'),
-    regimeTributario: yup.number().required('Campo obrigatório').oneOf([1, 2, 3, 4]),
-    ambiente: yup.string().required().oneOf(['producao', 'homologacao']),
     email: yup.string().email().required('Campo obrigatório'),
     telefone: yup.string().required('Campo obrigatório')
 })
@@ -63,25 +61,82 @@ const DadosForm = () => {
     const { handleSubmit, control } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
-            ambiente: '',
-            cnaePrincipal: '',
             cnpj: '',
             email: '',
             ieEstadual: '',
             ieMunicipal: '',
             nomeFantasia: '',
             razaoSocial: '',
-            regimeTributario: 1,
             telefone: ''
         }
     })
     const onSubmit = (data) => {
         console.log(data)
     }
+
+    const AntSwitch = styled(Switch)(({ theme }) => ({
+        width: 28,
+        height: 16,
+        padding: 0,
+        display: 'flex',
+        '&:active': {
+            '& .MuiSwitch-thumb': {
+                width: 15,
+            },
+            '& .MuiSwitch-switchBase.Mui-checked': {
+                transform: 'translateX(9px)',
+            },
+        },
+        '& .MuiSwitch-switchBase': {
+            padding: 2,
+            '&.Mui-checked': {
+                transform: 'translateX(12px)',
+                color: '#fff',
+                '& + .MuiSwitch-track': {
+                    opacity: 1,
+                    backgroundColor: '#1890ff',
+                    ...theme.applyStyles('dark', {
+                        backgroundColor: '#177ddc',
+                    }),
+                },
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+            width: 12,
+            height: 12,
+            borderRadius: 6,
+            transition: theme.transitions.create(['width'], {
+                duration: 200,
+            }),
+        },
+        '& .MuiSwitch-track': {
+            borderRadius: 16 / 2,
+            opacity: 1,
+            backgroundColor: 'rgba(0,0,0,.25)',
+            boxSizing: 'border-box',
+            ...theme.applyStyles('dark', {
+                backgroundColor: 'rgba(255,255,255,.35)',
+            }),
+        },
+    }));
+    const [tipoChecked, setTipoChecked] = useState<boolean>(true)
+
+    const handleSwitch = () => {
+        setTipoChecked((state) => !state)
+    }
     return (
         <Box sx={{ width: '100%' }}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid2 container spacing={2}>
+                    <Grid2 size={12}>
+                        <FormControl >
+                            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                                <FormLabel>Pessoa Fisica</FormLabel>
+                                <AntSwitch checked={tipoChecked} onChange={handleSwitch} inputProps={{ 'aria-label': 'ant design' }} />
+                            </Stack>
+                        </FormControl>
+                    </Grid2>
                     <Grid2 size={4}>
                         <Controller
                             control={control}
@@ -98,7 +153,7 @@ const DadosForm = () => {
                                         error={!!error}
                                         slotProps={{
                                             input: {
-                                                inputComponent: TextMaskCustom as any
+                                                inputComponent: tipoChecked ? CPFMaskCustom as any : CNPJMaskCustom as any
                                             }
                                         }}
                                     />
@@ -214,65 +269,7 @@ const DadosForm = () => {
                             )}
                         />
                     </Grid2>
-                    <Grid2 size={4}>
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true
-                            }}
-                            name="cnaePrincipal"
-                            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <FormControl fullWidth size="small">
-                                    <FormLabel>CNAE Principal*</FormLabel>
-                                    <Select onChange={onChange} value={value} >
-                                        <MenuItem value='producao'>Produção</MenuItem>
-                                        <MenuItem value='homologacao'>Homologação</MenuItem>
-                                    </Select>
-                                    {error && <FormHelperText >{error.message}</FormHelperText>}
-                                </FormControl>
-                            )}
-                        />
-                    </Grid2>
-                    <Grid2 size={4}>
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true
-                            }}
-                            name="regimeTributario"
-                            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <FormControl fullWidth size="small">
-                                    <FormLabel>Regime Tributário</FormLabel>
-                                    <Select onChange={onChange} value={value} >
-                                        <MenuItem value={1}>Simples Nacional</MenuItem>
-                                        <MenuItem value={2}>Simples Nacional – excesso de sublimite de receita bruta</MenuItem>
-                                        <MenuItem value={3}>Regime Normal</MenuItem>
-                                        <MenuItem value={4}>Simples Nacional - Microempreendedor individual (MEI)</MenuItem>
-                                    </Select>
-                                    {error && <FormHelperText >{error.message}</FormHelperText>}
-                                </FormControl>
-                            )}
-                        />
-                    </Grid2>
-                    <Grid2 size={4}>
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true
-                            }}
-                            name="ambiente"
-                            render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                <FormControl fullWidth size="small">
-                                    <FormLabel>Ambiente</FormLabel>
-                                    <Select onChange={onChange} value={value} >
-                                        <MenuItem value='producao'>Produção</MenuItem>
-                                        <MenuItem value='homologacao'>Homologação</MenuItem>
-                                    </Select>
-                                    {error && <FormHelperText >{error.message}</FormHelperText>}
-                                </FormControl>
-                            )}
-                        />
-                    </Grid2>
+
                     <Grid2 size={12} display='flex' flexDirection='row' justifyContent='flex-end'>
                         <Button variant="contained" type="submit" color="success">Salvar</Button>
                     </Grid2>

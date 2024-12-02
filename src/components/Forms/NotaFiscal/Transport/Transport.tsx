@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Search, Shuffle } from "@mui/icons-material";
-import ModalCadastroEmpresa from "./ModalCadastroEmpresa";
+import ModalCadastroEmpresa from "../../CadastroEmpresa/ModalCadastroEmpresa";
 const modalidade: Array<{ id: number, nome: string }> = [
     { id: 1, nome: 'Sem Ocorrência de Transporte', },
     { id: 2, nome: 'Contratação do Frete por conta do Remetente (CIF)', },
@@ -63,7 +63,7 @@ const TransportForm = () => {
     const { handleSubmit, control, formState: { errors }, watch } = useForm({
         resolver: yupResolver(transporteSchema),
     })
- 
+
     const [openModalEmpresa, setOpenModalEmpresa] = useState(false)
     function handleCloseModalEmpresa() {
         setOpenModalEmpresa(false)
@@ -74,7 +74,7 @@ const TransportForm = () => {
     console.log(watch())
     return (
         <Container>
-              {/*dados do Tranporte*/}
+            {/*dados do Tranporte*/}
             <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography color="textSecondary" fontWeight={"700"} variant="body2" >DADOS DO TRANSPORTE</Typography>
             </Box>
@@ -113,7 +113,8 @@ const TransportForm = () => {
 
             {/*Tranporte*/}
             <Box sx={{ bgcolor: "#cecece", padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
-                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR <Button sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button></Typography>
+                <Button sx={{ paddingY: "5px" }} disableElevation variant="contained">Selecionar</Button>
+                <Typography color="textSecondary" fontWeight={"700"} variant="body2" >TRANSPORTADOR </Typography>
             </Box>
 
             <Grid2 container sx={{ mt: 1 }} justifyContent={"space-between"} >
@@ -238,7 +239,7 @@ const TransportForm = () => {
             </Grid2>
 
             {/*Volumes*/}
-            <Box bgcolor={grey[300]}sx={{padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
+            <Box bgcolor={grey[300]} sx={{ padding: "6px", display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography color="textSecondary" fontWeight={"700"} variant="body2" >VOLUMES</Typography>
             </Box>
             <Grid2 container sx={{ mt: 1 }} gap={1} justifyContent={"space-between"}>
@@ -341,7 +342,7 @@ const TransportForm = () => {
                 </Grid2>
             </Grid2>
 
-        <ModalCadastroEmpresa open={openModalEmpresa} handleClose={handleCloseModalEmpresa} />
+            <ModalCadastroEmpresa open={openModalEmpresa} handleClose={handleCloseModalEmpresa} />
         </Container>
     )
 }
