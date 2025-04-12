@@ -5,10 +5,18 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
-import { AppProvider, Navigation, } from '@toolpad/core/AppProvider';
+import { AppProvider, LocalizationProvider, Navigation, Session, SessionContext } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';;
 import { Outlet } from 'react-router-dom';
+import { Account } from '@toolpad/core/Account';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import React from 'react';
+import { logout } from '@/features/user/userSlice';
+
 
 
 const NAVIGATION: Navigation = [
@@ -69,14 +77,44 @@ const demoTheme = extendTheme({
 
 
 export default function Layout(props: any) {
+    const { user } = useSelector((state: RootState) => state.user)
+    const [session, setSession] = useState<Session | null>(null)
+    const dispatch = useDispatch()
+    console.log(session)
+    const authentication = React.useMemo(() => {
+        return {
 
+            signIn: () => {
+                setSession({
+                    user: {
+                        email: user?.email,
+                        name: user?.firstName,
+                        id: user?.id
+                    }
+                })
+            },
+            signOut: () => {
+                setSession(null);
+                dispatch(logout())
+            },
+        };
+    }, []);
+
+    useEffect(() => {
+        authentication.signIn()
+    }, [])
     return (
         <AppProvider
             navigation={NAVIGATION}
             theme={demoTheme}
+            session={session}
+            branding={null}
+            authentication={authentication}
         >
+
             <DashboardLayout>
                 <PageContainer  >
+   
                     <Outlet />
                 </PageContainer>
             </DashboardLayout>
