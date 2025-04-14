@@ -5,11 +5,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
-import { AppProvider, LocalizationProvider, Navigation, Session, SessionContext } from '@toolpad/core/AppProvider';
+import { AppProvider, Navigation, Session } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';;
 import { Outlet } from 'react-router-dom';
-import { Account } from '@toolpad/core/Account';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { useEffect, useState } from 'react';
@@ -30,11 +29,11 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
-        segment: 'notas',
+        segment: 'dashboard/notas',
         title: 'Notas',
         icon: <ShoppingCartIcon />,
     }, {
-        segment: 'nota_fiscal',
+        segment: 'dashboard/nota_fiscal',
         title: 'Nota Fiscal',
         icon: <ShoppingCartIcon />,
     },
@@ -42,7 +41,7 @@ const NAVIGATION: Navigation = [
         kind: 'divider',
     },
     {
-        segment: 'reports',
+        segment: 'dashboard/reports',
         title: 'Relatorios',
         icon: <BarChartIcon />,
         children: [
@@ -54,7 +53,7 @@ const NAVIGATION: Navigation = [
         ],
     },
     {
-        segment: 'settings',
+        segment: 'dashboard/settings',
         title: 'Configurações',
         icon: <LayersIcon />,
     },
@@ -76,11 +75,11 @@ const demoTheme = extendTheme({
 
 
 
-export default function Layout(props: any) {
+export default function Layout() {
     const { user } = useSelector((state: RootState) => state.user)
     const [session, setSession] = useState<Session | null>(null)
     const dispatch = useDispatch()
-    console.log(session)
+
     const authentication = React.useMemo(() => {
         return {
 
@@ -114,7 +113,7 @@ export default function Layout(props: any) {
 
             <DashboardLayout>
                 <PageContainer  >
-   
+
                     <Outlet />
                 </PageContainer>
             </DashboardLayout>
