@@ -15,7 +15,7 @@ const Routing = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(initializeAuth())
-  }, [])
+  }, [dispatch])
   return (
 
     <Routes>
@@ -31,7 +31,7 @@ const Routing = () => {
       } />
 
       <Route element={<Layout />}>
-        <Route path="/dashboard/*" element={
+        <Route path="/*" element={
           <ProtectedRoute>
             <DashboardRoutes />
           </ProtectedRoute>
@@ -45,7 +45,7 @@ const Routing = () => {
 
       {/* Redirecionamentos */}
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+
     </Routes >
 
   );

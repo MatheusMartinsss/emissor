@@ -4,10 +4,11 @@ import { Navigate } from 'react-router-dom';
 
 export const ProtectedRoute = ({ children, requiredRole }: { children: JSX.Element; requiredRole?: string }) => {
     const { token, user } = useSelector((state: RootState) => state.user);
+    console.log(user)
     if (!token) {
         return <Navigate to="/login" replace />;
     }
-    if(requiredRole && user?.role !== requiredRole){
+    if (user && requiredRole && user?.role !== requiredRole) {
         return <Navigate to="/unauthorized" replace />;
     }
     return children;

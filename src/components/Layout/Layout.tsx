@@ -29,11 +29,11 @@ const NAVIGATION: Navigation = [
         icon: <DashboardIcon />,
     },
     {
-        segment: 'dashboard/notas',
+        segment: 'notas',
         title: 'Notas',
         icon: <ShoppingCartIcon />,
     }, {
-        segment: 'dashboard/nota_fiscal',
+        segment: 'nota_fiscal',
         title: 'Nota Fiscal',
         icon: <ShoppingCartIcon />,
     },
@@ -41,7 +41,7 @@ const NAVIGATION: Navigation = [
         kind: 'divider',
     },
     {
-        segment: 'dashboard/reports',
+        segment: 'reports',
         title: 'Relatorios',
         icon: <BarChartIcon />,
         children: [
@@ -53,7 +53,7 @@ const NAVIGATION: Navigation = [
         ],
     },
     {
-        segment: 'dashboard/settings',
+        segment: 'settings',
         title: 'Configurações',
         icon: <LayersIcon />,
     },
