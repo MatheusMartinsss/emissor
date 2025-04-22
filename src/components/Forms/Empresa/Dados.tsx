@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Box, Button, FormControl, FormHelperText, FormLabel, Grid2, MenuItem, Select, TextField } from "@mui/material"
 import React from 'react';
-
+import Search from '@mui/icons-material/Search';
 
 const schema = yup.object({
     cnpj: yup.string().required('Campo obrigatório'),
@@ -101,7 +101,15 @@ const DadosForm = () => {
                                                 inputComponent: TextMaskCustom as any
                                             }
                                         }}
-                                    />
+                                    >
+                                        <Button variant="contained" sx={{
+                                            fontSize: "10px",
+                                            display: "flex",
+                                            alignItems: "center", // Alinha o ícone e o texto verticalmente
+                                            gap: 1 // Adiciona um espaço entre o texto e o ícone
+                                        }}>Buscar <Search />
+                                        </Button>
+                                    </TextField>
                                     {error && <FormHelperText >{error.message}</FormHelperText>}
                                 </FormControl>
                             )}
