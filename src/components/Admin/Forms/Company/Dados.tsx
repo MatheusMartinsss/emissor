@@ -50,18 +50,18 @@ const DadosForm = () => {
     const [triggerGetEmpresa, { isLoading }] = useLazyGetEmpresaQuery();
 
     const handleSearchCompany = async () => {
-        const cnpj = getValues('info.cnpj').replace(/\D/g, '')
+        const cnpj = getValues('cnpj').replace(/\D/g, '')
         try {
             const response = await triggerGetEmpresa(cnpj).unwrap()
             if (response) {
                 const phoneFormated = `(${response.telefones[0].ddd}) ${response.telefones[0].numero}`
-                setValue('info.nomeFantasia', response.nome_fantasia)
-                setValue('info.razaoSocial', response.razao_social)
-                setValue('info.email', response.email)
-                setValue('info.telefone', phoneFormated)
-                setValue('info.cnaePrincipal', response.atividade_principal.codigo)
-                setValue('info.regimeTributario', response.simples.optante ? 1 : 3)
-                setValue('info.ambiente', 'producao')
+                setValue('nomePopular', response.nome_fantasia)
+                setValue('razaoSocial', response.razao_social)
+                setValue('email', response.email)
+                setValue('telefone', phoneFormated)
+                setValue('cnaePrincipal', response.atividade_principal.codigo)
+                setValue('regimeTributario', response.simples.optante ? 1 : 3)
+                setValue('ambiente', 'producao')
                 if (response.endereco) {
                     setValue('address.logradouro', response.endereco.logradouro)
                     setValue('address.numero', response.endereco.numero)
@@ -89,7 +89,7 @@ const DadosForm = () => {
                 <Grid2 size={6}>
                     <Controller
                         control={control}
-                        name="info.cnpj"
+                        name="cnpj"
                         render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
                             <FormControl fullWidth sx={{ display: 'flex', justifyContent: 'center' }} error={!!error}>
                                 <FormLabel component="legend" >
@@ -142,7 +142,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.razaoSocial"
+                        name="razaoSocial"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Razão Social*</FormLabel>
@@ -158,7 +158,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.nomeFantasia"
+                        name="nomePopular"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Nome Fantasia*</FormLabel>
@@ -174,7 +174,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.ieEstadual"
+                        name="ieEstadual"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Inscrição Estadual*</FormLabel>
@@ -190,7 +190,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.ieMunicipal"
+                        name="ieMunicipal"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Inscrição Municipal</FormLabel>
@@ -206,7 +206,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.email"
+                        name="email"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Email*</FormLabel>
@@ -222,7 +222,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.telefone"
+                        name="telefone"
                         render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Telefone*</FormLabel>
@@ -249,7 +249,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.cnaePrincipal"
+                        name="cnaePrincipal"
                         render={({ field: { onChange, value, onBlur }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>CNAE Principal*</FormLabel>
@@ -271,7 +271,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.regimeTributario"
+                        name="regimeTributario"
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Regime Tributário</FormLabel>
@@ -292,7 +292,7 @@ const DadosForm = () => {
                         rules={{
                             required: true
                         }}
-                        name="info.ambiente"
+                        name="ambiente"
                         render={({ field: { onChange, value }, fieldState: { error } }) => (
                             <FormControl fullWidth size="small">
                                 <FormLabel>Ambiente</FormLabel>

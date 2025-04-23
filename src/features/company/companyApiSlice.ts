@@ -18,4 +18,18 @@ export const companyApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
+export const createCompanyApiSlice = apiSlice.injectEndpoints({
+    endpoints: (builder) => ({
+        createCompany: builder.mutation({
+            query: (body) => ({
+                url: `/company`,
+                method: 'POST',
+                body
+            })
+        }),
+    })
+})
+
 export const { useGetCompanyQuery } = companyApiSlice;
+
+export const { useCreateCompanyMutation } = createCompanyApiSlice

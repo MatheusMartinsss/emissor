@@ -10,6 +10,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button } from '@mui/material';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useCreateCompanyMutation } from '@/features/company/companyApiSlice'
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -19,18 +20,16 @@ interface TabPanelProps {
 
 
 const schema = yup.object({
-    info: yup.object({
-        cnpj: yup.string().required('Campo obrigatório'),
-        ieEstadual: yup.string().required('Campo obrigatório'),
-        ieMunicipal: yup.string(),
-        razaoSocial: yup.string().required('Campo obrigatório').min(6, 'Minimo 12 caracteres').max(128),
-        nomeFantasia: yup.string().required('Campo obrigatório').min(6, 'Minimo 12 caracteres').max(128),
-        cnaePrincipal: yup.string().required('Campo obrigatório'),
-        regimeTributario: yup.number().required('Campo obrigatório').oneOf([1, 2, 3, 4]),
-        ambiente: yup.string().required().oneOf(['producao', 'homologacao']),
-        email: yup.string().email().required('Campo obrigatório'),
-        telefone: yup.string().required('Campo obrigatório')
-    }),
+    cnpj: yup.string().required('Campo obrigatório'),
+    ieEstadual: yup.string().required('Campo obrigatório'),
+    ieMunicipal: yup.string(),
+    razaoSocial: yup.string().required('Campo obrigatório').min(6, 'Minimo 12 caracteres').max(128),
+    nomePopular: yup.string().required('Campo obrigatório').min(6, 'Minimo 12 caracteres').max(128),
+    cnaePrincipal: yup.string().required('Campo obrigatório'),
+    regimeTributario: yup.number().required('Campo obrigatório').oneOf([1, 2, 3, 4]),
+    ambiente: yup.string().required().oneOf(['producao', 'homologacao']),
+    email: yup.string().email().required('Campo obrigatório'),
+    telefone: yup.string().required('Campo obrigatório'),
     address: yup.object({
         logradouro: yup.string().required(),
         numero: yup.string().required(),
@@ -50,18 +49,18 @@ const schema = yup.object({
 })
 
 const defaultValues = {
-    info: {
-        ambiente: '',
-        cnaePrincipal: '',
-        cnpj: '',
-        email: '',
-        ieEstadual: '',
-        ieMunicipal: '',
-        nomeFantasia: '',
-        razaoSocial: '',
-        regimeTributario: 1,
-        telefone: ''
-    },
+
+    ambiente: '',
+    cnaePrincipal: '',
+    cnpj: '',
+    email: '',
+    ieEstadual: '',
+    ieMunicipal: '',
+    nomePopular: '',
+    razaoSocial: '',
+    regimeTributario: 1,
+    telefone: '',
+
     address: {
         logradouro: '',
         numero: '',
@@ -106,6 +105,7 @@ function a11yProps(index: number) {
 
 const Company = () => {
     const [value, setValue] = React.useState(0);
+    const [createCompany, { isError }] = useCreateCompanyMutation()
     const methods = useForm({
         resolver: yupResolver(schema),
         defaultValues
@@ -115,9 +115,9 @@ const Company = () => {
     };
 
     const tabFields = [
-        ['info.ambiente', 'info.cnpj', 'info.razaoSocial', 'info.email', 'info.ieEstadual',
-            'info.ieMunicipal', 'info.nomeFantasia', 'info.regimeTributario', 'info.telefone',
-            'info.cnaePrincipal'],
+        ['ambiente', 'cnpj', 'razaoSocial', 'email', 'ieEstadual',
+            'ieMunicipal', 'nomePopular', 'regimeTributario', 'telefone',
+            'cnaePrincipal'],
         ['address.uf', 'address.cidade', 'address.logradouro', 'address.bairro', 'address.cep'],
         ['nfe.serie', 'nfe.sequencia']
     ];
@@ -167,8 +167,9 @@ const Company = () => {
             return;
         }
         try {
-            // Adicione sua lógica de API aqui
-            console.log(data);
+            await createCompany(data).unwrap()
+            methods.clearErrors()
+            methods.reset()
         } catch (error) {
             console.error('Erro ao salvar:', error);
         }

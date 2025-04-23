@@ -2,7 +2,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import { Box, Button, FormControl, FormLabel, Grid2, TextField } from "@mui/material"
 
 
-
 const NfeForm = () => {
     const { control } = useFormContext()
 
