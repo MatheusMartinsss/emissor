@@ -6,30 +6,31 @@ export const companyApiSlice = apiSlice.injectEndpoints({
             query: (cnpj) => ({
                 url: `/company/${cnpj}`,
                 method: 'GET',
-
             }),
+            providesTags: ['Company']
         }),
-        getCompanys: builder.query({
-            query: () => ({
-                url: `/company/`,
+        getCompanies: builder.query({
+            query: (params) => ({
+                url: `/company`,
                 method: 'GET',
-            })
-        })
-    }),
-});
-
-export const createCompanyApiSlice = apiSlice.injectEndpoints({
-    endpoints: (builder) => ({
+                params // Parâmetros de filtro/ordenação
+            }),
+            providesTags: ['Company']
+        }),
         createCompany: builder.mutation({
             query: (body) => ({
                 url: `/company`,
                 method: 'POST',
                 body
-            })
-        }),
-    })
-})
+            }),
+            invalidatesTags: ['Company']
+        })
+    }),
+});
 
-export const { useGetCompanyQuery } = companyApiSlice;
-
-export const { useCreateCompanyMutation } = createCompanyApiSlice
+// Exportar os hooks gerados automaticamente
+export const {
+    useGetCompanyQuery,
+    useGetCompaniesQuery,
+    useCreateCompanyMutation
+} = companyApiSlice;
